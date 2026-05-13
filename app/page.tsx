@@ -2,9 +2,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
-import { Send, History, Scroll, ShieldAlert, Award, Star, BookOpen } from 'lucide-react';
+import { Send, History, Scroll, ShieldAlert, Award, Star, BookOpen, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
+import Timeline from '@/components/Timeline';
 
 // Characters/System Prompt based on user instructions
 const ATATURK_SYSTEM_PROMPT = `Sen Mustafa Kemal Atatürk'sün. Öğrencilerle Kurtuluş Savaşı dönemi hakkında konuşuyorsun.
@@ -43,6 +44,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -103,7 +105,14 @@ export default function Home() {
           </h1>
         </div>
         <div className="flex gap-4 md:gap-8 text-[9px] md:text-[11px] uppercase tracking-widest font-sans text-[#8E887E]">
-          <span className="hidden md:inline">1919 - 1923 Kronolojisi</span>
+          <button 
+            onClick={() => setIsTimelineOpen(true)}
+            className="hover:text-[#9A1C1F] transition-colors flex items-center gap-1"
+          >
+            <Clock className="w-3 h-3" />
+            <span className="hidden md:inline">1919 - 1923 Kronolojisi</span>
+            <span className="md:hidden">Kronoloji</span>
+          </button>
           <span>Milli Mücadele Ruhu</span>
           <span className="hidden sm:inline">Gazi Mustafa Kemal</span>
         </div>
@@ -127,9 +136,15 @@ export default function Home() {
             </p>
             <button 
               onClick={() => setMessages([])}
-              className="w-full py-3 border border-[#D1CCC0] text-[10px] uppercase tracking-widest font-bold text-[#5A554D] hover:bg-[#9A1C1F] hover:text-white hover:border-[#9A1C1F] transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 border border-[#D1CCC0] text-[10px] uppercase tracking-widest font-bold text-[#5A554D] hover:bg-[#9A1C1F] hover:text-white hover:border-[#9A1C1F] transition-all flex items-center justify-center gap-2 mb-3"
             >
               <History className="w-4 h-4" /> Sohbeti Yenile
+            </button>
+            <button 
+              onClick={() => setIsTimelineOpen(true)}
+              className="w-full py-3 bg-[#9A1C1F] text-[10px] uppercase tracking-widest font-bold text-white hover:bg-[#80171a] transition-all flex items-center justify-center gap-2"
+            >
+              <Clock className="w-4 h-4" /> Kronolojiyi Gör
             </button>
           </div>
           <div className="space-y-6">
@@ -245,6 +260,9 @@ export default function Home() {
       
       {/* Visual Accent */}
       <div className="h-1.5 bg-gradient-to-r from-[#9A1C1F] via-[#D1CCC0] to-[#9A1C1F]"></div>
+
+      {/* Timeline Component */}
+      <Timeline isOpen={isTimelineOpen} onClose={() => setIsTimelineOpen(false)} />
     </div>
   );
 }
